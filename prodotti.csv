@@ -1,4 +1,4 @@
-name,description,price
+name,price,description
 "MARINARA: pom., aglio, origano, olio EVO","€5,00","MARINARA: pom., aglio, origano, olio EVO"
 "MARGHERITA: pomodoro, mozzarella","€5,50","MARGHERITA: pomodoro, mozzarella"
 "AFFUMICATA: pom., mozz., scamorza, pancetta, wurstel","€8,00","AFFUMICATA: pom., mozz., scamorza, pancetta, wurstel"
@@ -87,4 +87,5 @@ name,description,price
 "WURSTEL: pom., mozz., wurstel","€6,50","WURSTEL: pom., mozz., wurstel"
 "4 STAGIONI: pom., mozz., carciofi, funghi, olive nere, prosciutto cotto","€7,50","4 STAGIONI: pom., mozz., carciofi, funghi, olive nere, prosciutto cotto"
 "4 FORMAGGI: pom., mozz., zola, brie, taleggio","€7,50","4 FORMAGGI: pom., mozz., zola, brie, taleggio"
+
 
