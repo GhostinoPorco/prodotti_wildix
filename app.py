@@ -1,35 +1,41 @@
 from flask import Flask, request, jsonify
-import pandas as pd
+import csv
+import os
 
 app = Flask(__name__)
-
 CSV_FILE = "prodotti.csv"
 
-# Funzione per caricare il CSV
-def load_data():
-    return pd.read_csv(CSV_FILE)
-
-@app.route("/get_product", methods=["POST"])
-def get_product():
+# Endpoint per aggiungere un prodotto
+@app.route("/add_product", methods=["POST"])
+def add_product():
     try:
-        data = request.json
-        product_name = data.get("name")
-        if not product_name:
-            return jsonify({"error": "Parametro 'name' mancante"}), 400
+        data = request.get_json(force=True)
+        if not data or not all(k in data for k in ("name", "description", "price")):
+            return jsonify({"error": "JSON non valido. Richiesti: name, description, price"}), 400
 
-        df = load_data()
+        # Scrive sul CSV
+        with open(CSV_FILE, mode="a", newline="", encoding="utf-8") as f:
+            writer = csv.writer(f)
+            writer.writerow([data["name"], data["description"], data["price"]])
 
-        # Cerca il prodotto ignorando maiuscole/minuscole
-        match = df[df["Nome"].str.lower() == product_name.lower()]
-
-        if match.empty:
-            return jsonify({"error": "Prodotto non trovato"}), 404
-
-        prodotto = match.iloc[0].to_dict()
-        return jsonify(prodotto)
+        return jsonify({"message": "Prodotto aggiunto con successo!"})
 
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        return jsonify({"error": f"Errore nel server: {str(e)}"}), 500
+
+# Endpoint per ottenere i prodotti
+@app.route("/get_products", methods=["GET"])
+def get_products():
+    try:
+        products = []
+        if os.path.exists(CSV_FILE):
+            with open(CSV_FILE, mode="r", encoding="utf-8") as f:
+                reader = csv.DictReader(f)
+                for row in reader:
+                    products.append(row)
+        return jsonify(products)
+    except Exception as e:
+        return jsonify({"error": f"Errore nel server: {str(e)}"}), 500
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+    app.run(host="0.0.0.0", port=10000)
